@@ -10,7 +10,7 @@ require(['jquery', 'lodash', 'matrix'], function ($, _) {
     $.ajax({
         // TODO work off a more raw form of data and
         // prepare data prior to calling the plugin
-        url: '/data/prepared-data.js',
+        url: '../data/prepared-data.js',
         dataType: 'json'
     }).done(function (prepared) {
         var addLabels = function (outer_array, name) {

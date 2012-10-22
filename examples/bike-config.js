@@ -1,5 +1,4 @@
 require.config({
-    baseUrl: '/',
     enforceDefined: true,
     shim: {
         'jquery': {
@@ -21,12 +20,12 @@ require.config({
     },
     paths: {
         // libs
-        'jquery': '/libs/jquery/1.8.2/jquery.min',
-        'jquery-ui': '/libs/jqueryui/1.9.0/jquery-ui.custom.min',
-        'd3': '/libs/d3/2.10.3/d3.v2.min',
-        'lodash': '/libs/lodash/0.8.2/lodash.min',
-        'moment': '/libs/moment/1.7.2/moment.min',
+        'jquery': '../libs/jquery/1.8.2/jquery.min',
+        'jquery-ui': '../libs/jqueryui/1.9.0/jquery-ui.custom.min',
+        'd3': '../libs/d3/2.10.3/d3.v2.min',
+        'lodash': '../libs/lodash/0.8.2/lodash.min',
+        'moment': '../libs/moment/1.7.2/moment.min',
         // plugins
-        'matrix': '/plugins/matrix'
+        'matrix': '../plugins/matrix'
     }
 });

@@ -22,3 +22,7 @@ https://github.com/solenoid/d3-plugin-talk
 - Run a HTTP server: You can for example use the SimpleHTTPServer module of python and run `python -m SimpleHTTPServer` on the command line.
 
 - Finally, open http://0.0.0.0:8000/
+
+# Live Examples
+
+http://solenoid.github.com/d3-plugin-talk/
