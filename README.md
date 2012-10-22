@@ -1,5 +1,4 @@
-Make your own charting library with D3
-======================================
+# Make your own charting library with D3
 
 D3 gives you the flexibility needed for making creative visualizations, but
 this flexibility leaves the door open for spaghetti code. To prevent this you
@@ -15,3 +14,11 @@ be available to all before and after the talk in the following repo so you
 can put what you learn to work with your own data.
 
 https://github.com/solenoid/d3-plugin-talk
+
+# Getting Started
+
+- `git clone git@github.com:solenoid/d3-plugin-talk.git`
+
+- Run a HTTP server: You can for example use the SimpleHTTPServer module of python and run `python -m SimpleHTTPServer` on the command line.
+
+- Finally, open http://0.0.0.0:8000/
