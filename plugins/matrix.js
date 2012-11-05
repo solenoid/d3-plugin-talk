@@ -5,7 +5,7 @@ define(['jquery', 'lodash', 'd3', 'jquery-ui'], function ($, _, d3) {
     $.widget('ui.matrix', {
 
         options: {
-            // default min-width applied to data cells
+            // default width applied to data cells
             cellWidth: '32px',
             // explicity state if the overall column and row is aggregated
             aggregated: false,
@@ -37,58 +37,84 @@ define(['jquery', 'lodash', 'd3', 'jquery-ui'], function ($, _, d3) {
             return this._noDecimal(n / 1000000000) + 'b';
         },
 
-        // Data is assumed to be a 2 dimensional array with all inner arrays the same length.
-        // An appropriate data max is assumed to be passed in too.
+        // Data is assumed to be a 2 dimensional array with all rows the same length.
         // Labels _optional_ for the top and side are separate from the data and will be html escaped.
         _init: function () {
             var self = this,
-                tableHeaderRow,
-                tableRows,
-                labelEscaper = function (label) { return '<th>' + _.escape(label) + '</th>'; },
-                escapedTopHeaders = _.map(self.options.topLabels, labelEscaper),
-                escapedSideHeaders = _.map(self.options.sideLabels, labelEscaper),
-                data = self.options.data,
+                dataRows,
+                dataCells,
+                data = _.clone(self.options.data, true),
                 dataWidth = data[0].length,
                 dataHeight = data.length,
                 max = d3.max(_.flatten(data)),
-                colorScale = d3.scale.linear()
+                interpolate = self.options.color,
+                scale = d3.scale.linear()
                     .domain([0, max])
-                    .range([0, 1]),
-                table = self.element.append('<table></table').find('table:last');
+                    .range([0, 1]);
             self.formatter = self.options.format || self.kFormat;
-            if (self.options.topLabels) {
-                tableHeaderRow = '<tr>' + escapedTopHeaders.join('') + '</tr>';
-            } else {
-                tableHeaderRow = '';
-            }
-            tableRows = _.map(data, function (row, height_index) {
-                var rowLabel = escapedSideHeaders[height_index] || '';
-                var dataCells = _.map(row, function (val, width_index) {
-                    var scaledColor,
-                        colorVal = val,
-                        firstCell = (width_index === 0),
-                        lastCell = (width_index === (dataWidth - 1)),
-                        lastRow = (height_index === (dataHeight - 1)),
-                        cellWidthStyle = 'min-width:' + self.options.cellWidth + ';';
-                    // don't show null or undefined values
-                    if (val != null) {
-                        // scale color value down when it is an aggregated overall
+
+            // Poke side labels into the data
+            _.each(data, function (row, i) {
+                row.unshift(self.options.sideLabels[i]);
+            });
+
+            // ## Header Row
+            // DATA JOIN + ENTER
+            d3.select(self.element[0]).select('table thead').selectAll('th')
+                .data(self.options.topLabels)
+                .enter().append('th')
+                .text(function (d) { return d; });
+
+            // ## Rows
+            // DATA JOIN
+            dataRows = d3.select(self.element[0]).select('table tbody').selectAll('tr')
+                .data(data);
+
+            // ENTER
+            dataRows.enter().append('tr');
+
+            // EXIT
+            dataRows.exit().remove();
+
+            // ## Cells
+            // DATA JOIN
+            dataCells = dataRows.selectAll('td')
+                .data(function (d) { return d; });
+
+            // ENTER
+            dataCells.enter().append('td');
+
+            // UPDATE
+            dataCells.style({
+                    width: self.options.cellWidth,
+                    background: function (d, i, j) {
+                        var val = d,
+                            lastCell = (i === dataWidth), // row labels were added
+                            lastRow = (j === dataHeight - 1);
                         if (lastCell && self.options.aggregated) {
-                            colorVal = colorVal / dataWidth;
+                            val = val / dataWidth;
                         }
                         if (lastRow && self.options.aggregated) {
-                            colorVal = colorVal / dataHeight;
+                            val = val / dataHeight;
                         }
-                        scaledColor = self.options.color(colorScale(colorVal));
-                        return '<td style="' + cellWidthStyle + 'background:' + scaledColor + ';">' +
-                            self.formatter(val) +
-                            '</td>';
+                        return interpolate(scale(val));
                     }
-                    return ('<td style="' + cellWidthStyle + 'background:#fff;">&mdash;</td>');
-                }).join('\n');
-                return '<tr>' + rowLabel + dataCells + '</tr>';
-            }).join('\n');
-            table.append(tableHeaderRow + tableRows);
+                })
+                .html(function (d, i) {
+                    if (i === 0) {
+                        return _.escape(d);
+                    }
+                    if (d != null) {
+                        return self.formatter(d);
+                    }
+                    return '&mdash;';
+                });
+        },
+
+        // Called once the first time this plugin is used for an element.
+        _create: function () {
+            var self = this;
+            self.element.html('<table><thead><tr></tr></thead><tbody></tbody></table');
         }
 
     });
