@@ -50,8 +50,9 @@ define(['jquery', 'lodash', 'd3', 'jquery-ui'], function ($, _, d3) {
                 data = self.options.data,
                 dataWidth = data[0].length,
                 dataHeight = data.length,
+                max = d3.max(_.flatten(data)),
                 colorScale = d3.scale.linear()
-                    .domain([0, self.options.max])
+                    .domain([0, max])
                     .range([0, 1]),
                 table = self.element.append('<table></table').find('table:last');
             self.formatter = self.options.format || self.kFormat;
