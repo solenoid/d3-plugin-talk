@@ -39,7 +39,7 @@ define(['jquery', 'lodash', 'd3', 'jquery-ui'], function ($, _, d3) {
 
         // Data is assumed to be a 2 dimensional array with all inner arrays the same length.
         // An appropriate data max is assumed to be passed in too.
-        // Labels for the top and side are separate from the data and will be html escaped.
+        // Labels _optional_ for the top and side are separate from the data and will be html escaped.
         _init: function () {
             var self = this,
                 tableHeaderRow,
@@ -56,9 +56,13 @@ define(['jquery', 'lodash', 'd3', 'jquery-ui'], function ($, _, d3) {
                     .range([0, 1]),
                 table = self.element.append('<table></table').find('table:last');
             self.formatter = self.options.format || self.kFormat;
-            tableHeaderRow = '<tr>' + escapedTopHeaders.join('') + '</tr>';
+            if (self.options.topLabels) {
+                tableHeaderRow = '<tr>' + escapedTopHeaders.join('') + '</tr>';
+            } else {
+                tableHeaderRow = '';
+            }
             tableRows = _.map(data, function (row, height_index) {
-                var rowLabel = escapedSideHeaders[height_index];
+                var rowLabel = escapedSideHeaders[height_index] || '';
                 var dataCells = _.map(row, function (val, width_index) {
                     var scaledColor,
                         colorVal = val,
