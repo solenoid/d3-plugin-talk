@@ -115,7 +115,7 @@
                         return _.escape(d);
                     }
                     if (d != null) {
-                        return self.formatter(d);
+                        return '<div>' + self.formatter(d) + '</div>';
                     }
                     return '&mdash;';
                 });
