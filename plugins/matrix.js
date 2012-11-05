@@ -1,6 +1,16 @@
 // author : Erik Solen
 // license : MIT
-define(['jquery', 'lodash', 'd3', 'jquery-ui'], function ($, _, d3) {
+(function (factory) {
+    // UMD pattern.
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['jquery', 'lodash', 'd3', 'jquery-ui'], factory);
+    } else {
+        // Browser globals which will complain if you try to override.
+        /*global jQuery:false, _:false, d3:false */
+        factory(jQuery, _, d3);
+    }
+}(function ($, _, d3) {
 
     $.widget('ui.matrix', {
 
@@ -119,4 +129,4 @@ define(['jquery', 'lodash', 'd3', 'jquery-ui'], function ($, _, d3) {
 
     });
 
-});
+}));
