@@ -75,6 +75,11 @@
                 .enter().append('th')
                 .text(function (d) { return d; });
 
+            // Explanation of Nested Selection
+            // http://bost.ocks.org/mike/nest/
+            // Explanation of DATA JOIN, ENTER, UPDATE and EXIT
+            // http://bl.ocks.org/3808218
+
             // ## Rows
             // DATA JOIN
             dataRows = d3.select(self.element[0]).select('table tbody').selectAll('tr')
